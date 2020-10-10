@@ -2,9 +2,15 @@
 
 import logging
 import time
-from subprocess import Popen,PIPE,DEVNULL
+import os
+from subprocess import Popen,PIPE
 
 ROOT_PASSWORD = "grandmastersplinter"
+
+def command(command):
+    print("%------"+command+"------%")
+    logging.info(" [COMMAND] %s",command)
+    os.system(command)
 
 #Do a command as sudo
 def commandAsRoot(command):
@@ -34,8 +40,25 @@ def command(command):
 
 #stop monitoring
 def stopInterface():
-    return commandAsRoot("airmon-ng stop wlp2s0mon")
+    return commandAsRoot("airmon-ng stop wlan1mon")
 
 #rm csv,xml
 def rmOutputs():
-    commandAsRoot("sh ./reset.sh")
+    if os.path.exists("airodump-01.kismet.csv"):
+        os.remove("airodump-01.kismet.csv")
+        
+    if os.path.exists("./output/-01.log.csv"):
+        os.remove("./output/-01.log.csv")
+    if os.path.exists("./output/-01.kismet.netxml"):
+        os.remove("./output/-01.kismet.netxml")
+    if os.path.exists("./output/-01.kismet.csv"):
+        os.remove("./output/-01.kismet.csv")
+    if os.path.exists("./output/-01.csv"):
+        os.remove("./output/-01.csv")
+        
+def main():
+    rmOutputs()
+
+if __name__ == "__main__":
+    main()
+

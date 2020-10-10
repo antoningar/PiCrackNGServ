@@ -5,7 +5,7 @@ class Client:
         self.mac = ""
         self.manuf = ""
 
-    def setMAC(self, mac):
+    def setMac(self, mac):
         self.mac = mac
 
     def setManuf(self, manuf):
