@@ -56,6 +56,10 @@ def rmOutputs():
     if os.path.exists("./output/-01.csv"):
         os.remove("./output/-01.csv")
         
+def rmHandshake():
+    if os.path.exists("./output/-01.cap"):
+        os.remove("./output/-01.cap") 
+
 def main():
     rmOutputs()
 
