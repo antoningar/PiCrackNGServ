@@ -1,11 +1,6 @@
 from flask import Flask
 from flask import request
 from werkzeug.utils import secure_filename
-import mysql.connector
-import json
-import jsonpickle
-import os
-import time
 
 import Script
 import JSONHelper

@@ -1,17 +1,16 @@
 #!/usr/bin/env python
 
 import csv
+import codecs
 import Network
-import logging
 
 #parse csv
 #NEE TOO CHECK WPA
 def parseCSV(file):
     print("%------Parsing " + file + "------%")
-    logging.info(" [PARSING] %s",file)
     try:
         with open(file,'r') as csvfile:
-            CSVreader = csv.reader(csvfile, delimiter=';')
+            CSVreader = csv.reader((x.replace('\0', '') for x in csvfile), delimiter=';')
             networks = []
             header = True
             for row in CSVreader:
@@ -22,10 +21,10 @@ def parseCSV(file):
                     network = Network.Network(row[essidIndex],row[bssidIndex],row[channelIndex],row[encryptionId])
                     networks.append(network)
     except IOError:
-        logging.error(" Can't open file %s",file)
+        print(" Can't open file %s",file)
         raise
     except csv.Error as e:
-        logging.error(" Can't read %s, line %s : %s", (file,reader.line_num,e))
+        print(" Can't read %s, line %s : %s", (file,CSVreader.line_num,e))
         raise
 
     return networks
@@ -44,3 +43,11 @@ def getHeaderIndex(row):
             encryptionIndex = i
         i+=1
     return essidIndex,bssidIndex,channelIndex,encryptionIndex
+
+def main():
+    networks = parseCSV("airodump-01.kismet.csv")
+    for n in networks:
+        print(n)
+
+if __name__ == "__main__":
+    main()
