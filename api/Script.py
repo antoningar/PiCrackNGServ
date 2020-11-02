@@ -9,7 +9,7 @@ import requests
 import json
 import os
 
-SERVER_ADDR = 'http://192.168.43.88:8000/api/networks/'
+SERVER_ADDR = 'http://51.210.4.4:8000/api/networks/'
 HANDSHAKE_PATH = 'output/-01.cap'
 
 #reset

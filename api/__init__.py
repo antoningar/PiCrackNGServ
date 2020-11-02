@@ -27,6 +27,7 @@ def getNetworks():
 @app.route('/devices/',methods=['POST'])
 def getDevices():
     network = request.get_json()
+    print(network)
     devices = Script.getDevices(network)
     return devices
 
